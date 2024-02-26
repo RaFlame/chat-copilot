@@ -36,11 +36,14 @@ while ($backendRunning -eq $false -and $retryCount -lt $maxRetries) {
   $backendRunning = Test-NetConnection -ComputerName localhost -Port $port -InformationLevel Quiet
   Start-Sleep -Seconds $retryWait
 }
-
+python DataDialogInsert.py
+& C:/Python311/python.exe "c:/Users/rakello/OneDrive - Cegal AS/Documents/GitHub/Cegal DataDialog/chat-copilot/scripts/DataDialogInsert.py"
 # if the backend is running, start the frontend
 if ($backendRunning -eq $true) {
   # Start frontend (in current PS process)
   & $FrontendScript
+
+  
 } else { 
   # otherwise, write to the console that the backend is not running and we have exceeded the number of retries and we are exiting
   Write-Host "*************************************************"
