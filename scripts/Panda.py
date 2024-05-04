@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 
 # Define the database connection details for SQL Server Express with Trusted Connection
 # Replace 'your_server' and 'your_database' with your actual server and database names
-server = 'IT9-JHTFQV2\SQL2022'
+server = 'IT9-JHTFQV2\SQLEXPRESS02'
 database_name = 'TrackerDev'
 trusted_connection = 'yes'  # Use 'yes' for Trusted Connection
 
@@ -25,7 +25,3 @@ with engine.connect() as connection:
 
 # Print the result
 print("Rows affected:", result.rowcount)
-
-# Commit the changes and close the connection
-connection.commit()
-connection.close()

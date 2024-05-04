@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Initializes and runs both the backend and frontend for Chat Copilot.
+Initializes and runs both the backend and frontend for Chat Copilot, including setting up the database using TrackerDevDB.py.
 #>
 
 # Verify "Core" version of powershell installed (not "Desktop"): https://aka.ms/powershell
@@ -13,11 +13,16 @@ if (!$cmd) {
     return;
 }
 
+# Connecting to the database using TrackerDevDB.py
+$DatabaseScript = Join-Path "$PSScriptRoot" 'TrackerDevDB.py'
+Start-Process pwsh -ArgumentList "-command python `"$DatabaseScript`""
+
 $BackendScript = Join-Path "$PSScriptRoot" 'Start-Backend.ps1'
 $FrontendScript = Join-Path "$PSScriptRoot" 'Start-Frontend.ps1'
 
 # Start backend (in new PS process)
 Start-Process pwsh -ArgumentList "-command ""& '$BackendScript'"""
+
 # check if the backend is running before proceeding
 $backendRunning = $false
 
@@ -36,11 +41,11 @@ while ($backendRunning -eq $false -and $retryCount -lt $maxRetries) {
   $backendRunning = Test-NetConnection -ComputerName localhost -Port $port -InformationLevel Quiet
   Start-Sleep -Seconds $retryWait
 }
+
 # if the backend is running, start the frontend
 if ($backendRunning -eq $true) {
   # Start frontend (in current PS process)
   & $FrontendScript
-
   
 } else { 
   # otherwise, write to the console that the backend is not running and we have exceeded the number of retries and we are exiting
